@@ -6,6 +6,114 @@
 
   function initialize() {
 
+     var markers = [];
+  directionsDisplay = new google.maps.DirectionsRenderer();
+  var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+  var mapOptions = {
+    zoom:7,
+    center: new google.maps.LatLng(41.850033, -87.6500523)
+  };
+  //map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+  //directionsDisplay.setMap(map);
+  directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+  var control = document.getElementById('control');
+  //control.style.display = 'block';
+  //map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+
+  // Create the search box and link it to the UI element.
+  var input1 = /** @type {HTMLInputElement} */(
+      document.getElementById('start'));
+  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input1);
+
+  var searchBox1 = new google.maps.places.SearchBox(
+    /** @type {HTMLInputElement} */(input1));
+
+  // [START region_getplaces]
+  // Listen for the event fired when the user selects an item from the
+  // pick list. Retrieve the matching places for that item.
+  google.maps.event.addListener(searchBox1, 'places_changed', function() {
+    var places = searchBox1.getPlaces();
+
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      marker.setMap(null);
+    }
+
+    // For each place, get the icon, place name, and location.
+    markers = [];
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0, place; place = places[i]; i++) {
+      var image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a marker for each place.
+      var marker = new google.maps.Marker({
+        map: map,
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+      });
+
+      markers.push(marker);
+
+      bounds.extend(place.geometry.location);
+    }
+
+    map.fitBounds(bounds);
+  });
+
+  var input2 = /** @type {HTMLInputElement} */(
+      document.getElementById('end'));
+  // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input2);
+
+  var searchBox2 = new google.maps.places.SearchBox(
+    /** @type {HTMLInputElement} */(input2));
+
+  // [START region_getplaces]
+  // Listen for the event fired when the user selects an item from the
+  // pick list. Retrieve the matching places for that item.
+  google.maps.event.addListener(searchBox2, 'places_changed', function() {
+    var places = searchBox2.getPlaces();
+
+    if (places.length == 0) {
+      return;
+    }
+    for (var i = 0, marker; marker = markers[i]; i++) {
+      marker.setMap(null);
+    }
+
+    // For each place, get the icon, place name, and location.
+    markers = [];
+    var bounds = new google.maps.LatLngBounds();
+    for (var i = 0, place; place = places[i]; i++) {
+      var image = {
+        url: place.icon,
+        size: new google.maps.Size(71, 71),
+        origin: new google.maps.Point(0, 0),
+        anchor: new google.maps.Point(17, 34),
+        scaledSize: new google.maps.Size(25, 25)
+      };
+
+      // Create a marker for each place.
+      var marker = new google.maps.Marker({
+        map: map,
+        icon: image,
+        title: place.name,
+        position: place.geometry.location
+      });
+
+      markers.push(marker);
+
+      bounds.extend(place.geometry.location);
+    }
+
+    map.fitBounds(bounds);
+  });
 
     directionsDisplay = new google.maps.DirectionsRenderer();
     // var chicago = new google.maps.LatLng(41.850033, -87.6500523);
@@ -24,8 +132,9 @@
   function calcRoute() {
     $(".splash").fadeOut("1200", function() {
        $("#directions-panel").fadeIn();
-      var start = document.getElementById('start').value;
-      var end = document.getElementById('end').value;
+      var start = $('#start').val();
+      var end = $('#end').val();
+      console.log(start + end);
       var transitrequest = {
         origin: start,
         destination: end,
@@ -94,13 +203,9 @@
           return "point"
       })
       .attr("style", "fill: none;stroke-width: 4px;stroke:#3366FF;");
-      var steps = maps.routes[0].legs[0].steps;
-      for(var i = 0;i<steps.length;i++){
-            for(var j = 0;steps[i].lat_lngs;j++){
-               map.panTo(steps[i].lat_lngs[])
-            }
-          });
-      }
+      var steps = maps[0].legs[0].steps;
+  
+      
 
   
     //map.on("viewreset",reset);

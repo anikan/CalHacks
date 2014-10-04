@@ -4,7 +4,7 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Directions service</title>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
     <link rel="stylesheet" href="css/style.css">
      <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>  
@@ -21,10 +21,9 @@
         <img src="images/bike.png">
       </div>
       <div id="panel">
-        <b>Start: </b>
-        <input type="text" class="form-control" id="start" placeholder="Enter starting location">
-        <b>End: </b>
-        <input type="text" class="form-control" id="end" onchange="calcRoute();">
+       <input id="start" class="form-control" type="text" placeholder="Search Box"></input>
+      <input id="end" class="form-control" type="text" placeholder="Search Box"></input>
+      <input type="submit" class="btn btn-primary" value="Get Directions!" onClick="calcRoute();"></input>
       </div>
     </div>
     
