@@ -101,7 +101,7 @@ function calcRoute() {
 
       var transitRoute = response.routes[0].legs[0];
 
-      for (var i = 0; i < transitRoute.steps.length; i++) {
+      for (var i = 0; i < (transitRoute.steps.length-1); i++) {
 
         var bikeRequest = {
       origin:transitRoute.steps[i].start_location,
@@ -109,11 +109,17 @@ function calcRoute() {
       travelMode: google.maps.TravelMode.BICYCLING
        };
 
-       directionsService.route(bikeRequest, function(responseBike, status, transitRoute) {
-   // alert(status);
-    if (status == google.maps.DirectionsStatus.OK) {
+       directionsService.route(bikeRequest, (function(transitRoute) {
+
+        return function(responseBike, status){
+          console.log(responseBike);
+          console.log(transitRoute);
+
+
+          if (status == google.maps.DirectionsStatus.OK) {
       //directionsDisplay.setDirections(response);
       //alert(response.routes[0].legs[0].steps.length);
+      console.log(transitRoute);
      alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
      alert("Worked for Transit "+ transitRoute.steps[i].duration.value);
 
@@ -129,6 +135,9 @@ function calcRoute() {
 
 
     }
+        }
+   // alert(status);
+    
 
 
     
@@ -137,7 +146,7 @@ function calcRoute() {
     //alert(myRouteB.distance.text);
     
 
-  });
+  })(transitRoute));
 
 
       }
