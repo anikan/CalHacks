@@ -116,29 +116,24 @@ directionsService.route(transitrequest, function(response, status){
 					console.log(response.routes[0].legs[0]);
 					alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
 					//alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
-<<<<<<< HEAD
 
-<<<<<<< HEAD
 
     if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
-=======
+
 					bikeRoute = responseBike.routes[0].legs[0];
->>>>>>> FETCH_HEAD
 
 
 
-<<<<<<< HEAD
       for(var j =1; j<bikeRoute.steps.length ; j++){
         alert(bikeRoute.steps[j].instructions);
         response.routes[0].legs[0].steps.push(bikeRoute.steps[j]);
       }
-=======
+
 					if(bikeRoute.duration.value < response.routes[0].legs[0].steps[i].duration.value){
 
 						alert("Bike is Faster");
 						//The algorithm starts:
->>>>>>> FETCH_HEAD
-=======
+
 
 					bikeRoute = responseBike.routes[0].legs[0];
 
@@ -148,7 +143,7 @@ directionsService.route(transitrequest, function(response, status){
 
 						alert("Bike is Faster");
 						//The algorithm starts:
->>>>>>> FETCH_HEAD
+
 
 						var transitLength = response.routes[0].legs[0].steps.length;
 						response.routes[0].legs[0].steps.splice(i,1, bikeRoute.steps);
