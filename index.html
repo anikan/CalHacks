@@ -89,9 +89,6 @@ function calcRoute() {
   };
 
   directionsService.route(transitrequest, function(response, status) {
-    
-
-
 
 
     if (status == google.maps.DirectionsStatus.OK) {
@@ -112,9 +109,9 @@ function calcRoute() {
        directionsService.route(bikeRequest, (function(response) {
 
         return function(responseBike, status){
-          console.log("Bike: ")
+          console.log("Bike Leg: ")
 		  console.log(responseBike);
-          console.log("Response: ")
+          console.log("Response Steps: ")
 		  console.log(response.routes[0].legs[0]);
 
 
@@ -127,11 +124,14 @@ function calcRoute() {
 
      bikeRoute = responseBike.routes[0].legs[0];
 
+	 console.log(bikeRoute.duration.value + " min for step: " + i);
+	 console.log(response.routes[0].legs[0].steps[i].duration.value + " min for step: " + i);
+
     if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
 
       console.log("Bike is Faster");
-	  console.log(bikeRoute.duration.value);
-	  console.log(response.routes[0].legs[0].steps[i].duration.value);
+	  //console.log(bikeRoute.duration.value);
+	  //console.log(response.routes[0].legs[0].steps[i].duration.value);
       //The algorithm starts:
 /*
       var transitLength = response.routes[0].legs[0].steps.length;
@@ -158,7 +158,7 @@ function calcRoute() {
       }
 
       */
-		console.log("Replaced");
+		console.log("Replaced" + i);
 		console.log(response.routes[0].legs[0].steps[i]);
 		//First add the first bikeRoute step, replacing the previous step.
 		response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
