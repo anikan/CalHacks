@@ -122,14 +122,16 @@ function calcRoute() {
       //directionsDisplay.setDirections(response);
       //alert(response.routes[0].legs[0].steps.length);
       //console.log(response.routes[0].legs[0]);
-     alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
+     console.log("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
      //alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
 
      bikeRoute = responseBike.routes[0].legs[0];
 
     if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
 
-      alert("Bike is Faster");
+      console.log("Bike is Faster");
+	  console.log(bikeRoute.duration.value);
+	  console.log(response.routes[0].legs[0].steps[i].duration.value);
       //The algorithm starts:
 /*
       var transitLength = response.routes[0].legs[0].steps.length;
@@ -156,7 +158,17 @@ function calcRoute() {
       }
 
       */
+		console.log("Replaced");
+		console.log(response.routes[0].legs[0].steps[i]);
+		//First add the first bikeRoute step, replacing the previous step.
 		response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
+
+		 		
+		//Then add the remaining steps on the bikeRoute as needed.
+		for (var j = 1; j < bikeRoute.length; j++)
+		{
+			response.routes[0].legs[0].steps.splice(i + j, 0, bikeRoute.steps[j]);
+		} 
 		
     }
       directionsDisplay.setDirections(response);
