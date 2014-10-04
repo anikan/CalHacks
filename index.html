@@ -88,25 +88,19 @@ function calcRoute() {
       travelMode: google.maps.TravelMode.TRANSIT
   };
 
-  directionsService.route(transitrequest, function(response, status) {
-    
+directionsService.route(transitrequest, function(response, status){
 
-
-
-
-    if (status == google.maps.DirectionsStatus.OK) {
-      console.log(response);
-      
-
+	if(status == google.maps.DirectionsStatus.OK) {
+		console.log(response);
 
      // var response.routes[0].legs[0] = response.routes[0].legs[0];
+		//loop for the steps contained in variable response
+		for(var i = 0; i < (response.routes[0].legs[0].steps.length); i++) {
 
-      for (var i = 0; i < (response.routes[0].legs[0].steps.length-1); i++) {
-
-        var bikeRequest = {
-      origin:response.routes[0].legs[0].steps[i].start_location,
-      destination:response.routes[0].legs[0].steps[i].end_location,
-      travelMode: google.maps.TravelMode.BICYCLING
+		var bikeRequest = {
+		  origin:response.routes[0].legs[0].steps[i].start_location,
+		  destination:response.routes[0].legs[0].steps[i].end_location,
+		  travelMode: google.maps.TravelMode.BICYCLING
        };
 
        directionsService.route(bikeRequest, (function(response) {
@@ -116,51 +110,48 @@ function calcRoute() {
           console.log(response.routes[0].legs[0]);
 
 
-          if (status == google.maps.DirectionsStatus.OK) {
-      //directionsDisplay.setDirections(response);
-      //alert(response.routes[0].legs[0].steps.length);
-      console.log(response.routes[0].legs[0]);
-     alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
-     //alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
+			if (status == google.maps.DirectionsStatus.OK) {
+					//directionsDisplay.setDirections(response);
+					//alert(response.routes[0].legs[0].steps.length);
+					console.log(response.routes[0].legs[0]);
+					alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
+					//alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
 
-     bikeRoute = responseBike.routes[0].legs[0];
-
-    
-
-    if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
-
-      alert("Bike is Faster");
-      //The algorithm starts:
-
-      var transitLength = response.routes[0].legs[0].steps.length;
-
-      for(var j =0; j<bikeRoute.steps.length ; j++){
-
-        response.routes[0].legs[0].steps.push(bikeRoute.steps[j]);
-      }
-
-      //Make the comparable step equal to the first step in the bike route.
-      response.routes[0].legs[0].steps[i] = bikeRoute.steps[0];
+					bikeRoute = responseBike.routes[0].legs[0];
 
 
-      //Moving the last steps next to the 
-      for(var w = 0; j<bikeRoute.steps.length;w++){
 
-          var storedStep = response.routes[0].legs[0].steps[i+w+1];
+					if(bikeRoute.duration.value < response.routes[0].legs[0].steps[i].duration.value){
 
-          response.routes[0].legs[0].steps[i+w+1] = response.routes[0].legs[0].steps[transitLength+w];
+						alert("Bike is Faster");
+						//The algorithm starts:
 
-          response.routes[0].legs[0].steps[transitLength+w] = storedStep;
+						var transitLength = response.routes[0].legs[0].steps.length;
+						response.routes[0].legs[0].steps.splice(i,1, bikeRoute.steps);
+						/*
+						for(var j =0; j<bikeRoute.steps.length ; j++){
+							response.routes[0].legs[0].steps.push(bikeRoute.steps[j]);
+						}
+		
+						//Make the comparable step equal to the first step in the bike route.
+						response.routes[0].legs[0].steps[i] = bikeRoute.steps[0];
 
 
-      }
+						//Moving the last steps next to the 
+						for(var w = 0; w<bikeRoute.steps.length;w++){
 
-      
+							var storedStep = response.routes[0].legs[0].steps[i+w+1];
 
-    }
-      directionsDisplay.setDirections(response);
+							response.routes[0].legs[0].steps[i+w+1] = response.routes[0].legs[0].steps[transitLength+w];
 
-    }
+							response.routes[0].legs[0].steps[transitLength+w] = storedStep;
+
+						}
+						*/
+					}
+				directionsDisplay.setDirections(response);
+
+			}
         }
    // alert(status);
     
