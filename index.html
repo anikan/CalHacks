@@ -99,7 +99,7 @@ function calcRoute() {
       directionsDisplay.setDirections(response);
 
 
-      transitRoute = response.routes[0].legs[0];
+      var transitRoute = response.routes[0].legs[0];
 
       for (var i = 0; i < transitRoute.steps.length; i++) {
 
@@ -109,19 +109,23 @@ function calcRoute() {
       travelMode: google.maps.TravelMode.BICYCLING
        };
 
-       directionsService.route(bikeRequest, function(responseBike, status) {
+       directionsService.route(bikeRequest, function(responseBike, status, transitRoute) {
    // alert(status);
     if (status == google.maps.DirectionsStatus.OK) {
       //directionsDisplay.setDirections(response);
       //alert(response.routes[0].legs[0].steps.length);
      alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
-     alert("Worked for Transit "+ myRoute.steps[i].duration.value);
+     alert("Worked for Transit "+ transitRoute.steps[i].duration.value);
 
-     myRouteB = responseBike.routes[0].legs[0];
+     bikeRoute = responseBike.routes[0].legs[0];
 
     
 
-      
+    if(bikeRoute.duration.value<transitRoute.steps[i].duration.value){
+
+      alert("Bike is Faster");
+
+    }
 
 
     }
