@@ -74,7 +74,7 @@ function initialize() {
   directionsDisplay.setPanel(document.getElementById('directions-panel'));
 
   var control = document.getElementById('control');
-  control.style.display = 'block';
+  //control.style.display = 'block';
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
 
 }
@@ -112,29 +112,29 @@ function calcRoute() {
        directionsService.route(bikeRequest, (function(response) {
 
         return function(responseBike, status){
-          console.log(responseBike);
-          console.log(response.routes[0].legs[0]);
+          console.log("Bike: ")
+		  console.log(responseBike);
+          console.log("Response: ")
+		  console.log(response.routes[0].legs[0]);
 
 
           if (status == google.maps.DirectionsStatus.OK) {
       //directionsDisplay.setDirections(response);
       //alert(response.routes[0].legs[0].steps.length);
-      console.log(response.routes[0].legs[0]);
+      //console.log(response.routes[0].legs[0]);
      alert("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
      //alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
 
      bikeRoute = responseBike.routes[0].legs[0];
 
-    
-
     if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
 
       alert("Bike is Faster");
       //The algorithm starts:
-
+/*
       var transitLength = response.routes[0].legs[0].steps.length;
 
-      for(var j =0; j<bikeRoute.steps.length ; j++){
+      for(var j =0; j < bikeRoute.steps.length; j++){
 
         response.routes[0].legs[0].steps.push(bikeRoute.steps[j]);
       }
@@ -144,7 +144,7 @@ function calcRoute() {
 
 
       //Moving the last steps next to the 
-      for(var w = 0; j<bikeRoute.steps.length;w++){
+      for(var w = 0; w < bikeRoute.steps.length;w++){
 
           var storedStep = response.routes[0].legs[0].steps[i+w+1];
 
@@ -155,8 +155,9 @@ function calcRoute() {
 
       }
 
-      
-
+      */
+		response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
+		
     }
       directionsDisplay.setDirections(response);
 
