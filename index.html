@@ -4,115 +4,100 @@
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <title>Directions service</title>
-     <style>
-      html, body, #map-canvas {
-        height: 100%;
-        margin: 0px;
-        padding: 0px
-      }
-      #panel {
-        position: absolute;
-        top: 5px;
-        left: 50%;
-        margin-left: -180px;
-        z-index: 5;
-        background-color: #fff;
-        padding: 5px;
-        border: 1px solid #999;
-      }
-    </style>
-    <style>
-      #directions-panel {
-        height: 100%;
-        float: right;
-        width: 390px;
-        overflow: auto;
-      }
-
-      #map-canvas {
-        margin-right: 400px;
-      }
-
-      #control {
-        background: #fff;
-        padding: 5px;
-        font-size: 14px;
-        font-family: Arial;
-        border: 1px solid #ccc;
-        box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
-        display: none;
-      }
-
-      @media print {
-        #map-canvas {
-          height: 500px;
-          margin: 0;
-        }
-
-        #directions-panel {
-          float: none;
-          width: auto;
-        }
-      }
-    </style>
-    </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
-    <script>
-var directionsDisplay;
-var directionsService = new google.maps.DirectionsService();
-var map;
-
-function initialize() {
-  directionsDisplay = new google.maps.DirectionsRenderer();
-  var chicago = new google.maps.LatLng(41.850033, -87.6500523);
-  var mapOptions = {
-    zoom:7,
-    center: new google.maps.LatLng(41.850033, -87.6500523)
-  };
-  map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
-  directionsDisplay.setMap(map);
-  directionsDisplay.setPanel(document.getElementById('directions-panel'));
-
-  var control = document.getElementById('control');
-  control.style.display = 'block';
-  map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
-
-}
-
-function calcRoute() {
-  var start = document.getElementById('start').value;
-  var end = document.getElementById('end').value;
-  var transitrequest = {
-      origin:start,
-      destination:end,
-      travelMode: google.maps.TravelMode.TRANSIT
-  };
-   var bikerequest = {
-      origin:start,
-      destination:end,
-      travelMode: google.maps.TravelMode.BICYCLING
-  };
-  directionsService.route(transitrequest, function(response, status) {
-    if (status == google.maps.DirectionsStatus.OK) {
-      console.log(response);
-      directionsDisplay.setDirections(response);
-    }
-  });
-}
-
-google.maps.event.addDomListener(window, 'load', initialize);
-
-    </script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>
+<link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    
   </head>
   <body>
+    <div class="splash">
+      <h1>Fixie</h1>
+      <div class="logo">
+        <img src="images/bike.png">
+      </div>
+      <div id="panel">
+        <b>Start: </b>
+        <input type="text" class="form-control" id="start" placeholder="Enter starting location">
+        <b>End: </b>
+        <input type="text" class="form-control" id="end" onchange="calcRoute();">
+      </div>
+    </div>
     <div id="directions-panel">
     </div>
-    <div id="panel">
-    <b>Start: </b>
-    <input type="text" id="start">
-    <b>End: </b>
-    <input type="text" id="end" onchange="calcRoute();">
+    
+    <div id="map-canvas">
+      <div id="map">
+      </div>
+      
     </div>
-    <div id="map-canvas"></div>
+    <script>
+      var directionsDisplay;
+      var directionsService = new google.maps.DirectionsService();
+      var map;
+
+      var pos;
+      function initialize() {
+        // Provide your access token
+        L.mapbox.accessToken = 'pk.eyJ1IjoiaG1pbGxpc29uIiwiYSI6ImlTV0J6MlEifQ.ucAZL19112n4FI3osinfRw';
+// Create a map in the div #map
+        L.mapbox.map('map', 'hmillison.jm4ka3fj', {          zoomControl: false
+        }).setView([41.850033, -87.6500523], 14);
+
+    
+        // directionsDisplay = new google.maps.DirectionsRenderer();
+        // var chicago = new google.maps.LatLng(41.850033, -87.6500523);
+        // var mapOptions = {
+        //   zoom:7,
+        //   center: new google.maps.LatLng(41.850033, -87.6500523)
+        // };
+        // //map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        // //directionsDisplay.setMap(map);
+        // //directionsDisplay.setPanel(document.getElementById('directions-panel'));
+
+        // var control = document.getElementById('control');
+        // map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
+      }
+
+      function calcRoute() {
+        $(".splash").fadeOut("1200", function(){
+          var start = document.getElementById('start').value;
+          var end = document.getElementById('end').value;
+          var transitrequest = {
+              origin:start,
+              destination:end,
+              travelMode: google.maps.TravelMode.TRANSIT
+          };
+           var bikerequest = {
+              origin:start,
+              destination:end,
+              travelMode: google.maps.TravelMode.BICYCLING
+          };
+          directionsService.route(transitrequest, function(response, status) {
+            if (status == google.maps.DirectionsStatus.OK) {
+              var map = response;
+              console.log(map);
+              $.ajax({
+                type: "POST",
+                url: '/createGeoJSON',
+              }.success(function(data){
+                console.log(data);
+              })
+              );
+              //directionsDisplay.setDirections(map);
+              // var output = response;
+              // output.routes[0].legs[0].steps = [];
+              // console.log(output);
+            }
+          });
+        });
+        
+      }
+
+      google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
   </body>
 </html>
