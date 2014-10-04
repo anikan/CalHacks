@@ -57,7 +57,10 @@
     </style>
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
     <script>
+
 var directionsDisplay;
 var directionsService = new google.maps.DirectionsService();
 var map;
@@ -78,6 +81,9 @@ function initialize() {
   map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
 
 }
+
+var deferreds = []
+var bikeResults = [];
 
 function calcRoute() {
   var start = document.getElementById('start').value;
@@ -104,9 +110,34 @@ function calcRoute() {
       origin:response.routes[0].legs[0].steps[i].start_location,
       destination:response.routes[0].legs[0].steps[i].end_location,
       travelMode: google.maps.TravelMode.BICYCLING
-       };
+       };	
+     var dObject = new $.Deferred();
+	deferreds.push(dObject);
+	GetBike(bikeRequest,response,dObject);
 
-       directionsService.route(bikeRequest, (function(response) {
+      }
+      
+      $.when.apply($,deferreds).done(function()
+      {
+      	console.log(bikeResults);
+      	function compareSteps(response, bikeResults);
+      });
+
+
+
+    }
+
+
+
+
+
+  });
+}
+
+
+
+function GetBike(bikeRequest, response, dObject){
+	 directionsService.route(bikeRequest, (function(response) {
 
         return function(responseBike, status){
           console.log("Bike Leg: ")
@@ -114,22 +145,24 @@ function calcRoute() {
           console.log("Response Steps: ")
 		  console.log(response.routes[0].legs[0]);
 
-
           if (status == google.maps.DirectionsStatus.OK) {
       //directionsDisplay.setDirections(response);
       //alert(response.routes[0].legs[0].steps.length);
       //console.log(response.routes[0].legs[0]);
+      dObject.resolve();
+     bikeResults.push(responseBike);
+
      console.log("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
      //alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
 
-     bikeRoute = responseBike.routes[0].legs[0];
+  //    bikeRoute = responseBike.routes[0].legs[0];
 
-	 console.log(bikeRoute.duration.value + " min for step: " + i);
-	 console.log(response.routes[0].legs[0].steps[i].duration.value + " min for step: " + i);
+	 // console.log(bikeRoute.duration.value + " min for step: " + i);
+	 // console.log(response.routes[0].legs[0].steps[i].duration.value + " min for step: " + i);
 
-    if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
+  //   if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
 
-      console.log("Bike is Faster");
+  //     console.log("Bike is Faster");
 	  //console.log(bikeRoute.duration.value);
 	  //console.log(response.routes[0].legs[0].steps[i].duration.value);
       //The algorithm starts:
@@ -158,19 +191,19 @@ function calcRoute() {
       }
 
       */
-		console.log("Replaced" + i);
-		console.log(response.routes[0].legs[0].steps[i]);
-		//First add the first bikeRoute step, replacing the previous step.
-		response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
+		// console.log("Replaced" + i);
+		// console.log(response.routes[0].legs[0].steps[i]);
+		// //First add the first bikeRoute step, replacing the previous step.
+		// response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
 
 		 		
-		//Then add the remaining steps on the bikeRoute as needed.
-		for (var j = 1; j < bikeRoute.steps.length; j++)
-		{
-			response.routes[0].legs[0].steps.splice(i + j, 0, bikeRoute.steps[j]);
-		} 
+		// //Then add the remaining steps on the bikeRoute as needed.
+		// for (var j = 1; j < bikeRoute.steps.length; j++)
+		// {
+		// 	response.routes[0].legs[0].steps.splice(i + j, 0, bikeRoute.steps[j]);
+		// } 
 		
-    }
+  //   }
       directionsDisplay.setDirections(response);
 
     }
@@ -186,21 +219,6 @@ function calcRoute() {
     
 
   })(response));
-
-
-      }
-      
-
-
-
-
-    }
-
-
-
-
-
-  });
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
