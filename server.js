@@ -33,7 +33,7 @@ app.post('/createGeoJSON', function(req,res){
 	var rawData = JSON.parse(req.body.directions);
 	featureCollection.features = [];
 
-  for(var i=0;i<rawData.steps.length-1;i++) {
+  for(var i=0;i<rawData.length-1;i++) {
     coordinates = rawData[i].polyline.points;
    coordinates2 = rawData[i+1].polyline.points;
     coordinates = polyline.decode(coordinates);
