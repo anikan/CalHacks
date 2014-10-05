@@ -215,30 +215,56 @@ $(document).on("mouseout", ".row", function(e) {
 var deferreds = []
 var bikeResults = [];
 
+
+
+
+
   function compareSteps(transitResponse, bikeResults) {
 
     console.log("Comparing Routes");
+    console.log(transitResponse.routes[0].legs[0]);
+    console.log("Bike Results");
+    console.log(bikeResults);
 
-    for (var w = 0; w < (transitResponse.routes[0].legs[0].steps.length - 1); w++) {
+    for (var w = 0; w < (transitResponse.routes[0].legs[0].steps.length); w++) {
 
-      if (transitResponse.routes[0].legs[0].steps[w].duration.value > bikeResults[w].routes[0].legs[0].duration.value) {
-        console.log("Bike is Faster" + w);
-
-
-        ///////////////////////////////////////////////////////////
-
-        // WHERE THE STRUGGLE IS
-        ///////
-        /////////////////////////////////////////////////
-
-        // transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[w].routes[0].legs[0].steps[0]);
+         console.log("Transit Loop" + w);
 
 
-      } else {
-        console.log("Bike is not good" + w);
+      for(var y = 0 ; y<bikeResults[w].routes[0].legs[0].steps.length; y++){
+
+        console.log("Bike Loop" + y);
+
+        if(transitResponse.routes[0].legs[0].steps[w].start_location === bikeResults[y].routes[0].legs[0].start_location){
+
+          if(transitResponse.routes[0].legs[0].steps[w].duration.value > bikeResults[y].routes[0].legs[0].duration.value){
+
+                transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[y].routes[0].legs[0].steps[0]);
+
+                console.log(bikeResults[y].routes[0].legs[0]);
+
+                 console.log( transitResponse.routes[0].legs[0]);
+                  for(var u= 1 ; y<bikeResults[y].routes[0].legs[0].steps.length; u++){
+                      console.log("Going trough the loop");
+                      transitResponse.routes[0].legs[0].steps.splice(w+u,0,bikeResults[w].routes[0].legs[0].steps[u]);
+
+                    }
+
+
+                }   
+
+        }
+
+
+
       }
 
+      
+
     }
+
+
+
     $.ajax({
       type: "POST",
       url: '/createGeoJSON',
