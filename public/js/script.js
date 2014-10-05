@@ -247,7 +247,7 @@ var bikeResults = [];
                 //console.log(bikeResults[y].routes[0].legs[0]);
 
                  //console.log( transitResponse.routes[0].legs[0]);
-                  for(var u= 1 ; y<bikeResults[y].routes[0].legs[0].steps.length; u++){
+                  for(var u= 1 ; u<bikeResults[y].routes[0].legs[0].steps.length; u++){
                       console.log("Going trough the loop");
                       transitResponse.routes[0].legs[0].steps.splice(w+u,0,bikeResults[w].routes[0].legs[0].steps[u]);
 
