@@ -153,57 +153,7 @@ $(document).on("mouseout", ".row", function(e) {
     //var control = document.getElementById('control');
     //map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
   }
-
-  $('#location-form').submit(function(e) {
-    e.preventDefault();
-    if ($('#start').val().length > 0 && $('#end').val().length > 0) {
-      $(".splash").fadeOut("1200", function() {
-        calcRoute();
-      });
-    } else {
-      $('#start').addClass('error');
-      $('#end').addClass('error');
-    }
-  });
-
-  function calcRoute() {
-    $("#directions-panel").fadeIn();
-    var start = $('#start').val();
-    var end = $('#end').val();
-    var transitrequest = {
-      origin: start,
-      destination: end,
-      travelMode: google.maps.TravelMode.TRANSIT
-    }
-      directionsService.route(transitrequest, function(response, status) {
-          if (status == google.maps.DirectionsStatus.OK) {
-            // var response.routes[0].legs[0] = response.routes[0].legs[0];
-            var steps = response.routes[0].legs[0].steps;
-            $(".directions-list").append("<h4>" + response.routes[0].legs[0].start_address + "<br/> to <br/>" + response.routes[0].legs[0].end_address + "</h4>" + response.routes[0].legs[0].distance.text + " - " + response.routes[0].legs[0].duration.text);
-
-            for (var i = 0; i < (response.routes[0].legs[0].steps.length); i++) {
-              console.log("Iteration num# " + i);
-              console.log(response.routes[0].legs[0].steps[i].start_location);
-
-              var bike_start = response.routes[0].legs[0].steps[i].start_location;
-              var bike_end = response.routes[0].legs[0].steps[i].end_location;
-              var bikeRequest = create_request(bike_start, bike_end, google.maps.TravelMode.BICYCLING);
-
-              var dObject = new $.Deferred();
-              deferreds.push(dObject);
-              GetBike(bikeRequest, response, dObject);
-            }
-            $.when.apply($, deferreds).done(function() {
-              console.log(bikeResults);
-              compareSteps(response, bikeResults);
-            });
-          }
-
-
-        });
-
-
-  }
+  
 
   function create_request(or, dest, tra_mod){
   return {
@@ -212,129 +162,166 @@ $(document).on("mouseout", ".row", function(e) {
     travelMode: tra_mod
   };
 }
-var deferreds = []
+var deferreds = []; 
 var bikeResults = [];
 
-
-
-
-
-  function compareSteps(transitResponse, bikeResults) {
-
-    console.log("Comparing Routes");
-    console.log(transitResponse.routes[0].legs[0]);
-    console.log("Bike Results");
-    console.log(bikeResults);
-
-    for (var w = 0; w < (transitResponse.routes[0].legs[0].steps.length); w++) {
-
-         console.log("Transit Loop" + w);
-
-
-      for(var y = 0 ; y<bikeResults.length; y++){
-
-        console.log("Bike Loop" + y );
-
-        console.log("Checking if " + transitResponse.routes[0].legs[0].steps[w].start_location.B + "  " + bikeResults[y].routes[0].legs[0].start_location.B);
-        if((transitResponse.routes[0].legs[0].steps[w].start_location.B === bikeResults[y].routes[0].legs[0].start_location.B) &&(transitResponse.routes[0].legs[0].steps[w].start_location.k === bikeResults[y].routes[0].legs[0].start_location.k)){
-            console.log("Same Start Location");
-          if(transitResponse.routes[0].legs[0].steps[w].duration.value > bikeResults[y].routes[0].legs[0].duration.value){
-
-
-                console.log("Bike is Fastest");
-                transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[y].routes[0].legs[0].steps[0]);
-
-                //console.log(bikeResults[y].routes[0].legs[0]);
-
-                 //console.log( transitResponse.routes[0].legs[0]);
-                  for(var u= 1 ; u<bikeResults[y].routes[0].legs[0].steps.length; u++){
-                      console.log("Going trough the loop");
-                      transitResponse.routes[0].legs[0].steps.splice(w+u,0,bikeResults[w].routes[0].legs[0].steps[u]);
-
-                    }
-
-
-                }   
-
-        }
-
-
-
-      }
-
-      
-
+//on submit button execute calcRoute()
+$('#location-form').submit(function(e) {
+    e.preventDefault();
+    if ($('#start').val().length > 0 && $('#end').val().length > 0) {
+        $(".splash").fadeOut("1200", function(){
+            calcRoute();
+        });
+    }else{
+        $('#start').addClass('error');
+        $('#end').addClass('error');
     }
+  });
+  
+//built header of direction list
+function built_directions_header(legs){
+  $(".directions-list").append(
+    "<h4>" + legs.start_address +
+      "<br/> to <br/>" + legs.end_address + 
+    "</h4>" + 
+    legs.distance.text + " - " + 
+    legs.duration.text);
+}
 
+function calcRoute(){
+  $("#directions-panel").fadeIn();
+  var start = $('#start').val();
+  var end = $('#end').val();
+  var transitrequest = create_request(start,end,google.maps.TravelMode.TRANSIT);
 
+  directionsService.route(transitrequest, function(response, status) {
+      if (status == google.maps.DirectionsStatus.OK) {
+        built_directions_header(response.routes[0].legs[0]);
 
-    $.ajax({
-      type: "POST",
-      url: '/createGeoJSON',
-      data: {
-        'directions': JSON.stringify(transitResponse.routes[0].legs[0].steps)
-      },
-      dataType: 'json',
-      success: function(data) {
-        drawRoute(data, transitResponse);
-      },
-      error: function(data){
-        $("#directions-panel").text("");
-        $("#directions-panel").fadeOut();
-        $(".splash").fadeIn();
-      }
-    });
-    var steps = transitResponse.routes[0].legs[0].steps;
-    for (var i = 0; i < steps.length; i++) {
-      $(".directions-list").append("<div class='row' id='"+ i +"'><span class='lead'>" + steps[i].instructions + "</span><br />" + steps[i].duration.text + "</div>")
-    }
+        for (var i = 0; i < (response.routes[0].legs[0].steps.length); i++) {
+          var current_step = response.routes[0].legs[0].steps[i];// current step of the iteration
+          console.log("Iteration num# " + i);
+          console.log(current_step.start_location);
 
-  }
+          var bike_start = current_step.start_location;
+          var bike_end = current_step.end_location;
+          var bikeRequest = create_request(bike_start, bike_end, google.maps.TravelMode.BICYCLING);
 
-  function GetBike(bikeRequest, response, dObject) {
-    directionsService.route(bikeRequest, (function(response) {
-
-      return function(responseBike, status) {
-        console.log("Bike Leg: ")
-        console.log(responseBike);
-
-        if (status == google.maps.DirectionsStatus.OK) {
-          dObject.resolve();
-          bikeResults.push(responseBike);
-
+          var dObject = new $.Deferred();
+          deferreds.push(dObject);
+          GetBike(bikeRequest,dObject);
         }
+        $.when.apply($, deferreds).done(function() {
+          console.log(bikeResults);
+          compareSteps(response, bikeResults);
+        });
       }
+  });
+}
 
 
 
-    })(response));
+
+
+function compareSteps(transitResponse, bikeResults) {
+
+  console.log("Comparing Routes");
+  console.log(transitResponse.routes[0].legs[0]);
+  console.log("Bike Results");
+  console.log(bikeResults);
+
+  for (var w = 0; w < (transitResponse.routes[0].legs[0].steps.length); w++) {
+    var transit_step = transitResponse.routes[0].legs[0].steps[w];//current w_th transit step
+    console.log("Transit Loop" + w);
+
+    for(var y = 0 ; y<bikeResults.length; y++){
+      var bike_leg = bikeResults[y].routes[0].legs[0];//current y_th bike leg
+      console.log("Bike Loop" + y );
+      //console.log("Checking if " + transitResponse.routes[0].legs[0].steps[w].start_location.B + "  " + bikeResults[y].routes[0].legs[0].start_location.B);
+      if((transit_step.start_location.B === bike_leg.start_location.B) 
+        &&(transit_step.start_location.k === bike_leg.start_location.k)){
+        console.log("Same Start Location");
+        if(transit_step.duration.value > bike_leg.duration.value){
+          console.log("Bike is Fastest");
+          //transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[y].routes[0].legs[0].steps[0]);
+          transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[y].routes[0].legs[0].steps[0]);
+
+          for(var u= 1 ; u<bikeResults[y].routes[0].legs[0].steps.length; u++){
+            var bike_step = bikeResults[w].routes[0].legs[0].steps[u]; //current bike step
+            console.log("Going trough the loop");
+            transitResponse.routes[0].legs[0].steps.splice(w+u,0,bike_step);
+
+          }//end for bikeResults...legs 
+        }//end if transit > bike
+      }//end && if
+    }//end for bikeResults.length
+  }//end for transitResponse 
+  
+/*after loop transit response has been cobined with bikeResults*/
+
+
+  $.ajax({
+    type: "POST",
+    url: '/createGeoJSON',
+    data: {
+      'directions': JSON.stringify(transitResponse.routes[0].legs[0].steps)
+    },
+    dataType: 'json',
+    success: function(data) {
+      drawRoute(data, transitResponse);
+    },
+    error: function(data){
+      $("#directions-panel").text("");
+      $("#directions-panel").fadeOut();
+      $(".splash").fadeIn();
+    }
+  });
+  var steps = transitResponse.routes[0].legs[0].steps;
+  for (var i = 0; i < steps.length; i++) {
+    $(".directions-list").append(
+    "<div class='row' id='"+ i +"'>\
+      <span class='lead'>" + steps[i].instructions + "</span>\
+      <br />" +
+       steps[i].duration.text + 
+    "</div>")
   }
+}
 
-  function drawRoute(data, maps) {
-    console.log(maps);
+function GetBike(bikeRequest, dObject) {
+  directionsService.route(bikeRequest,function(responseBike, status) {
+      //console.log("Bike Leg: ")
+      //console.log(responseBike);
 
-    map.setView([data.features[0].geometry.coordinates[0][1], data.features[0].geometry.coordinates[0][0]], 14);
-    var svg = d3.select(map.getPanes().overlayPane).append("svg"),
-      g = svg.append("g").attr("class", "leaflet-zoom-hide");
-    var transform = d3.geo.transform({
-        point: projectPoint
-      }),
-      d3path = d3.geo.path().projection(transform);
-    var feature = g.selectAll("path")
-      .data(data.features)
-      .enter().append("path")
-      .attr("class", function(d) {
-        console.log(d);
-        return "point" + d.properties.key;
-      })
-      .attr("id", function(d){
-        return d.geometry.coordinates[0][1] + "," + d.geometry.coordinates[0][0];
-      })
-      .attr("style", "fill: none;stroke-width: 4px;stroke:#3366FF;");
+      if (status == google.maps.DirectionsStatus.OK) {
+        dObject.resolve();
+        bikeResults.push(responseBike);
+
+      }//end if
+  });//end directionService
+}//end GetBike
+
+function drawRoute(data, maps) {
+  //console.log(maps);
+
+  map.setView([data.features[0].geometry.coordinates[0][1], data.features[0].geometry.coordinates[0][0]], 14);
+  var svg = d3.select(map.getPanes().overlayPane).append("svg"),
+  g = svg.append("g").attr("class", "leaflet-zoom-hide");
+  var transform = d3.geo.transform({
+    point: projectPoint
+  }),
+  d3path = d3.geo.path().projection(transform);
+  var feature = g.selectAll("path")
+    .data(data.features)
+    .enter().append("path")
+    .attr("class", function(d) {
+      console.log(d);
+      return "point" + d.properties.key;
+    })
+    .attr("id", function(d){
+      return d.geometry.coordinates[0][1] + "," + d.geometry.coordinates[0][0];
+     })
+    .attr("style", "fill: none;stroke-width: 4px;stroke:#3366FF;");
     var steps = maps.routes[0].legs[0].steps;
-
-
-
     map.on("viewreset", reset);
     reset();
 
