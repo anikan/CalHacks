@@ -1,18 +1,28 @@
   var directionsDisplay;
   var directionsService = new google.maps.DirectionsService();
-  var map;
+      L.mapbox.accessToken = 'pk.eyJ1IjoiaG1pbGxpc29uIiwiYSI6ImlTV0J6MlEifQ.ucAZL19112n4FI3osinfRw';
+  var map = L.mapbox.map('map', 'hmillison.jm4ka3fj', {
+      zoomControl: false
+    });
+
 
   var pos;
 
-$(document).ready(function(){
-  $(".row").on("hover",function(){
-    console.log(this);
-    var id = $(this).attr("id");
-    $(".point" + id).css("stroke","#E74C3C")
+
+  
+$(document).on("mouseover", ".row", function(e) {
+  var id = $(this).attr("id");
+  $(".point"+id).css("stroke",'#C0392B');
+  console.log("does this work?");
+  var longlang = $(".point"+id).attr("id").split(",");
+  map.panTo([longlang[0],longlang[1]])
   });
 
+$(document).on("mouseout", ".row", function(e) {
+  var id = $(this).attr("id");
+  $(".point"+id).css("stroke",'#3366FF');
+
 });
-  
 
 
   function initialize() {
@@ -272,12 +282,8 @@ var bikeResults = [];
 
   function drawRoute(data, maps) {
     console.log(maps);
-    // Provide your access token
-    L.mapbox.accessToken = 'pk.eyJ1IjoiaG1pbGxpc29uIiwiYSI6ImlTV0J6MlEifQ.ucAZL19112n4FI3osinfRw';
-    // Create a map in the div #map
-    var map = L.mapbox.map('map', 'hmillison.jm4ka3fj', {
-      zoomControl: false
-    }).setView([data.features[0].geometry.coordinates[0][1], data.features[0].geometry.coordinates[0][0]], 14);
+
+    map.setView([data.features[0].geometry.coordinates[0][1], data.features[0].geometry.coordinates[0][0]], 14);
     var svg = d3.select(map.getPanes().overlayPane).append("svg"),
       g = svg.append("g").attr("class", "leaflet-zoom-hide");
     var transform = d3.geo.transform({
@@ -291,12 +297,15 @@ var bikeResults = [];
         console.log(d);
         return "point" + d.properties.key;
       })
+      .attr("id", function(d){
+        return d.geometry.coordinates[0][1] + "," + d.geometry.coordinates[0][0];
+      })
       .attr("style", "fill: none;stroke-width: 4px;stroke:#3366FF;");
     var steps = maps.routes[0].legs[0].steps;
 
 
 
-    //map.on("viewreset", reset);
+    map.on("viewreset", reset);
     reset();
 
 
