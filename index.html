@@ -86,8 +86,8 @@ function initialize() {
 }
 
 function set_test_route(){
-  document.getElementById('start').value = "ucsd";
-  document.getElementById('end').value = "ucla";
+  document.getElementById('start').value = "uc berkeley";
+  document.getElementById('end').value = "san francisco";
   calcRoute();
 }
 
@@ -139,11 +139,18 @@ function compareSteps(transitResponse, bikeResults){
 
   console.log("Comparing Routes");
 
- for(var w=0; w<(transitResponse.routes[0].legs[0].steps.length-1);w++){
+ for(var w=0; w<(transitResponse.routes[0].legs[0].steps.length - 1);w++){
 
-    if(transitResponse.routes[0].legs[0].steps[w].duration.value>bikeResults[w].routes[0].legs[0].duration.value){
+    if(transitResponse.routes[0].legs[0].steps[w].duration.value >= bikeResults[w].routes[0].legs[0].duration.value){
       console.log("Bike is Faster" +w);
-
+	  transitResponse.routes[0].legs[0].steps.splice(w,1,bikeResults[w].routes[0].legs[0].steps[0]);
+	  
+	  for (var y = 1; y < bikeResults[w].routes[0].legs[0].steps.length - 1; y++)
+	  {
+	    console.log("hi");
+		console.log(bikeResults[w].routes[0].legs[0].steps[y]);
+		transitResponse.routes[0].legs[0].steps.splice(w+y,0,bikeResults[w].routes[0].legs[0].steps[y]);
+	  }
     }
     else{
       console.log("Bike is not good"+w);
