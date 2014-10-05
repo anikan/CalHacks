@@ -279,8 +279,8 @@ function compareSteps(transitResponse, bikeResults) {
   var steps = transitResponse.routes[0].legs[0].steps;
   for (var i = 0; i < steps.length; i++) {
     console.log(steps[i].instructions);
-    var instructions = steps[i].instructions.replace("Destination will be on the right","");
-    var instructions = instructions.replace("Destination will be on the left","");
+    var instructions = steps[i].instructions.replace('<div style="font-size:0.9em">Destination will be on the right</div>',"");
+    var instructions = instructions.replace('<div style="font-size:0.9em">Destination will be on the right</div>',"");
     console.log(instructions);
     var html = "<div class='row' id='"+ i +"'><span class='lead'>" + instructions + "</span><br />" 
       + steps[i].duration.text;

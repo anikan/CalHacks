@@ -87,9 +87,10 @@ html, body, #map-canvas {
 
       #directions-panel .row{
         background: rgba(149, 165, 166, .5);
-        margin-top: 5%;
-        margin-bottom: 5%;
+        padding-top: 5%;
+        padding-bottom: 5%;
         padding: 3%;
+        margin-bottom:1%;
         transition: background 0.5s ease;
       }
 
