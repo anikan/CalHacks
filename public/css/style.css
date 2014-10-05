@@ -85,6 +85,14 @@ html, body, #map-canvas {
 
       }
 
+      #expand-dir{
+        margin-bottom:2%;
+      }
+
+      #retract-dir{
+        margin-bottom:1%;
+      }
+
       #directions-panel .row{
         background: rgba(149, 165, 166, .5);
         padding-top: 5%;

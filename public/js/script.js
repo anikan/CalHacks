@@ -26,6 +26,23 @@ $(document).on("mouseout", ".row", function(e) {
 
 });
 
+$(document).on("click","#expand-dir", function(e){
+  $("#expand-dir").text("Back to map")
+  $(this).attr("id","retract-dir");
+  $("#directions-panel").animate({
+    "width":"100%",
+    "margin-left": "0%"
+  },1000);
+});
+
+$(document).on("click","#retract-dir", function(e){
+  $("#retract-dir").text("Expand Directions");
+  $(this).attr("id","expand-dir");
+  $("#directions-panel").animate({
+    "width":"25%",
+    "margin-left": "75%"
+  },1000);
+});
 
   function initialize() {
 
@@ -185,7 +202,7 @@ function built_directions_header(legs){
       "<br/> to <br/>" + legs.end_address + 
     "</h4>" + 
     legs.distance.text + " - " + 
-    legs.duration.text);
+    legs.duration.text + "<br><button class='btn btn-default btn-sm' id='expand-dir'>Expand Directions</button>");
 }
 
 function calcRoute(){
