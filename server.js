@@ -33,11 +33,11 @@ app.post('/createGeoJSON', function(req,res){
 	var rawData = JSON.parse(req.body.directions);
 	featureCollection.features = [];
 
-  for(var i=0;i<rawData.length-1;i++) {
+  for(var i=0;i<rawData.length;i++) {
     coordinates = rawData[i].polyline.points;
-   coordinates2 = rawData[i+1].polyline.points;
+   // coordinates2 = rawData[i+1].polyline.points;
     coordinates = polyline.decode(coordinates);
-   coordinates2 = polyline.decode(coordinates2);
+   // coordinates2 = polyline.decode(coordinates2);
 
     var feature = {
       type:"Feature",
@@ -48,14 +48,14 @@ app.post('/createGeoJSON', function(req,res){
       }
     }
 
-    var feature2 = {
-      type:"Feature",
-      properties:{},
-      geometry:{
-        type:"LineString",
-        coordinates:[]
-      }
-    }
+    // var feature2 = {
+    //   type:"Feature",
+    //   properties:{},
+    //   geometry:{
+    //     type:"LineString",
+    //     coordinates:[]
+    //   }
+    // }
 
     for(var j=0;j<coordinates.length;j++){
 
@@ -64,12 +64,12 @@ app.post('/createGeoJSON', function(req,res){
 	feature.geometry.coordinates.push(coord);
 	};
 
-	for(var j=0;j<coordinates2.length;j++){
+	// for(var j=0;j<coordinates2.length;j++){
 
-	  var coord = [coordinates2[j][1],coordinates2[j][0]]
-	//create a feature
-	feature2.geometry.coordinates.push(coord);
-	};
+	//   var coord = [coordinates2[j][1],coordinates2[j][0]]
+	// //create a feature
+	// feature2.geometry.coordinates.push(coord);
+	// };
 
 
 	feature.properties.key = i;
