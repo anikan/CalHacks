@@ -197,12 +197,18 @@ $('#location-form').submit(function(e) {
   
 //built header of direction list
 function built_directions_header(legs){
+    var dist = Number(legs.distance.text.replace("mi",""));
+   var gallons = dist/25;
+    var emissions = gallons * 19.64
   $(".directions-list").append(
     "<h4>" + legs.start_address +
       "<br/> to <br/>" + legs.end_address + 
     "</h4>" + 
     legs.distance.text + " - " + 
-    legs.duration.text + "<br><button class='btn btn-default btn-sm' id='expand-dir'>Expand Directions</button>");
+    legs.duration.text + 
+    "<div>Estimated Savings from Gas: <b>$" + (gallons*3.50).toFixed(2)  +"</b></div><div>Number of pounds prevented from entering atmosphere: <b>" + 
+    emissions.toFixed(2) + "</b></div></div><br><button class='btn btn-default btn-sm' id='expand-dir'>Expand Directions</button>");
+
 }
 
 function calcRoute(){
@@ -304,10 +310,10 @@ function compareSteps(transitResponse, bikeResults) {
       if(steps[i].travel_mode == "BICYCLING"){
         html += "<br /> <img src='/images/bike.png' style='width:20%'>";
       }
-    html += "</div>";
+   
     $(".directions-list").append(html);
   }
-}
+  }
 
 function GetBike(bikeRequest, dObject) {
   directionsService.route(bikeRequest,function(responseBike, status) {
