@@ -229,8 +229,12 @@ var bikeResults = [];
       dataType: 'json',
       success: function(data) {
         drawRoute(data, transitResponse);
-
-
+      },
+      error: function(data){
+        $(".logo").append("Error Loading Directions");
+        
+        $("#directions-panel").fadeOut();
+        $(".splash").fadeIn();
       }
     });
     var steps = transitResponse.routes[0].legs[0].steps;
