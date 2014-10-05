@@ -231,19 +231,22 @@ var bikeResults = [];
          console.log("Transit Loop" + w);
 
 
-      for(var y = 0 ; y<bikeResults[w].routes[0].legs[0].steps.length; y++){
+      for(var y = 0 ; y<bikeResults.length; y++){
 
-        console.log("Bike Loop" + y);
+        console.log("Bike Loop" + y );
+
 
         if(transitResponse.routes[0].legs[0].steps[w].start_location === bikeResults[y].routes[0].legs[0].start_location){
-
+            console.log("Same Start Location");
           if(transitResponse.routes[0].legs[0].steps[w].duration.value > bikeResults[y].routes[0].legs[0].duration.value){
 
+
+                console.log("Bike is Fastest");
                 transitResponse.routes[0].legs[0].steps.splice(w, 1, bikeResults[y].routes[0].legs[0].steps[0]);
 
-                console.log(bikeResults[y].routes[0].legs[0]);
+                //console.log(bikeResults[y].routes[0].legs[0]);
 
-                 console.log( transitResponse.routes[0].legs[0]);
+                 //console.log( transitResponse.routes[0].legs[0]);
                   for(var u= 1 ; y<bikeResults[y].routes[0].legs[0].steps.length; u++){
                       console.log("Going trough the loop");
                       transitResponse.routes[0].legs[0].steps.splice(w+u,0,bikeResults[w].routes[0].legs[0].steps[u]);
