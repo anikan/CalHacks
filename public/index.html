@@ -16,14 +16,15 @@
   </head>
   <body>
     <div class="splash">
-      <h1>Fixie</h1>
       <div class="logo">
         <img src="images/bike.png">
       </div>
       <div id="panel">
-       <input id="start" class="form-control" type="text" placeholder="Search Box"></input>
-      <input id="end" class="form-control" type="text" placeholder="Search Box"></input>
-      <input type="submit" class="btn btn-primary" value="Get Directions!" onClick="calcRoute();"></input>
+        <form id="location-form">
+          <input id="start" class="form-control" type="text" placeholder="Start Location"></input>
+          <input id="end" class="form-control" type="text" placeholder="End Location"></input>
+          <input type="submit" class="btn btn-primary" value="Get Directions!"></input>
+        </form>
       </div>
     </div>
     

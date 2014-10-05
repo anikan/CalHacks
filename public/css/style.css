@@ -22,14 +22,21 @@ html, body, #map-canvas {
       .logo{
         padding:5%;
       }
-     
+      .error{
+        animation: highlight 1s;
+        border-color: #E74C3C;
+        outline: 0;
+         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(231, 76, 60, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(231, 76, 60, 0.6);
+      }
+
       #panel {
         width:50%;
         margin:auto;
         padding:1%;
       }
       #panel input{
-        width: 30%;
+        width: 40%;
         margin: 3%;
         text-align:center;
         display: inline-block;
@@ -76,7 +83,6 @@ html, body, #map-canvas {
         margin-top: 5%;
         margin-bottom: 5%;
         padding: 3%;
-        font-size:20px;
       }
 
       .directions-list{

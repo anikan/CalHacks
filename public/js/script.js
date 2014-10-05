@@ -4,6 +4,9 @@
 
   var pos;
 
+
+
+
   function initialize() {
 
      var markers = [];
@@ -129,8 +132,20 @@
     //map.controls[google.maps.ControlPosition.TOP_CENTER].push(control);
   }
 
+  $('#location-form').submit(function(e){
+    e.preventDefault();
+    if($('#start').val().length > 0 && $('#end').val().length > 0){
+      $(".splash").fadeOut("1200", function() {
+       calcRoute();
+      });
+    }
+    else{
+      $('#start').addClass('error');
+      $('#end').addClass('error');
+    }
+  });
+
   function calcRoute() {
-    $(".splash").fadeOut("1200", function() {
        $("#directions-panel").fadeIn();
       var start = $('#start').val();
       var end = $('#end').val();
@@ -148,9 +163,11 @@
       directionsService.route(transitrequest, function(response, status) {
         console.log(response);
         var steps = response.routes[0].legs[0].steps;
-        $(".directions-list").append("<h4>" + response.routes[0].legs[0].start_address + "<br/> to <br/>" + response.routes[0].legs[0].end_address + "</h4>");
+        $(".directions-list").append("<h4>" + response.routes[0].legs[0].start_address + "<br/> to <br/>" + response.routes[0].legs[0].end_address + "</h4>" 
+                                      + response.routes[0].legs[0].distance.text + " - " + response.routes[0].legs[0].duration.text);
         for(var i = 0;i<steps.length;i++){
-          $(".directions-list").append("<div class='row'>" + steps[i].instructions + "</div>")
+          $(".directions-list").append("<div class='row'><span class='lead'>" + steps[i].instructions + "</span><br />" 
+                                        + steps[i].duration.text + "</div>")
         }
         if (status == google.maps.DirectionsStatus.OK) {
           var maps = response.routes;
@@ -172,7 +189,6 @@
       
         }
       });
-    });
 
 
 
@@ -207,17 +223,16 @@
   
       
 
-  
-    //map.on("viewreset",reset);
+    map.on("viewreset",reset);
     reset();
 
 
 
 
-    var coords = data.features[0].geometry.coordinates;
  
     // Reposition the SVG to cover the features.
     function reset() {
+      console.log("reset");
       var bounds = d3path.bounds(data);
       topLeft = bounds[0],
       bottomRight = bounds[1];
@@ -236,8 +251,6 @@
         .attr("transform", function(d) {
           return translatePoint(d);
         });
-
-
     }
 
     // $(".point").each(function(d) {
@@ -269,6 +282,7 @@
     }
 
     function translatePoint(d) {
+      console.log(d);
       var point = map.latLngToLayerPoint(new L.LatLng(d[1], d[0]));
 
       return "translate(" + point.x + "," + point.y + ")";
