@@ -134,19 +134,101 @@ function calcRoute() {
   });
 }
 
+
+function compareSteps(transitResponse, bikeResults){
+
+  console.log("Comparing Routes");
+
+ for(var w=0; w<(transitResponse.routes[0].legs[0].steps.length-1);w++){
+
+    if(transitResponse.routes[0].legs[0].steps[w].duration.value>bikeResults[w].routes[0].legs[0].duration.value){
+      console.log("Bike is Faster" +w);
+
+    }
+    else{
+      console.log("Bike is not good"+w);
+    }
+
+ }
+
+       directionsDisplay.setDirections(transitResponse);
+
+
+ //console.log(transitResponse.routes[0].legs[0].steps[2]);
+
+}
+
 function GetBike(bikeRequest, response, dObject){
 	 directionsService.route(bikeRequest, (function(response) {
 
         return function(responseBike, status){
           console.log("Bike Leg: ")
 		      console.log(responseBike);
-          console.log("Response Steps: ")
-		      console.log(response.routes[0].legs[0]);
+          //console.log("Response Steps: ")
+		      //console.log(responseBike.routes[0].legs[0]);
 
           if (status == google.maps.DirectionsStatus.OK) {
            dObject.resolve();
            bikeResults.push(responseBike);
-           console.log("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
+
+
+           //console.log("Worked for Bike "+ responseBike.routes[0].legs[0].distance.text);
+
+
+
+
+     //alert("Worked for Transit "+ response.routes[0].legs[0].steps[i].duration.value);
+
+  //    bikeRoute = responseBike.routes[0].legs[0];
+
+	 // console.log(bikeRoute.duration.value + " min for step: " + i);
+	 // console.log(response.routes[0].legs[0].steps[i].duration.value + " min for step: " + i);
+
+  //   if(bikeRoute.duration.value<response.routes[0].legs[0].steps[i].duration.value){
+
+  //     console.log("Bike is Faster");
+	  //console.log(bikeRoute.duration.value);
+	  //console.log(response.routes[0].legs[0].steps[i].duration.value);
+      //The algorithm starts:
+/*
+      var transitLength = response.routes[0].legs[0].steps.length;
+
+      for(var j =0; j < bikeRoute.steps.length; j++){
+
+        response.routes[0].legs[0].steps.push(bikeRoute.steps[j]);
+      }
+
+      //Make the comparable step equal to the first step in the bike route.
+      response.routes[0].legs[0].steps[i] = bikeRoute.steps[0];
+
+
+      //Moving the last steps next to the 
+      for(var w = 0; w < bikeRoute.steps.length;w++){
+
+          var storedStep = response.routes[0].legs[0].steps[i+w+1];
+
+          response.routes[0].legs[0].steps[i+w+1] = response.routes[0].legs[0].steps[transitLength+w];
+
+          response.routes[0].legs[0].steps[transitLength+w] = storedStep;
+
+
+      }
+
+      */
+		// console.log("Replaced" + i);
+		// console.log(response.routes[0].legs[0].steps[i]);
+		// //First add the first bikeRoute step, replacing the previous step.
+		// response.routes[0].legs[0].steps.splice(i, 1, bikeRoute.steps[0]);
+
+		 		
+		// //Then add the remaining steps on the bikeRoute as needed.
+		// for (var j = 1; j < bikeRoute.steps.length; j++)
+		// {
+		// 	response.routes[0].legs[0].steps.splice(i + j, 0, bikeRoute.steps[j]);
+		// } 
+		
+  //   }
+
     }
         }
    // alert(status);
