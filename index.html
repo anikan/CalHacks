@@ -144,6 +144,16 @@ function compareSteps(transitResponse, bikeResults){
     if(transitResponse.routes[0].legs[0].steps[w].duration.value>bikeResults[w].routes[0].legs[0].duration.value){
       console.log("Bike is Faster" +w);
 
+
+      ///////////////////////////////////////////////////////////
+
+      // WHERE THE STRUGGLE IS
+      ///////
+      /////////////////////////////////////////////////
+
+      transitResponse.routes[0].legs[0].steps.splice(w,1,bikeResults[w].routes[0].legs[0].steps[0]);
+
+
     }
     else{
       console.log("Bike is not good"+w);
@@ -237,10 +247,10 @@ function GetBike(bikeRequest, response, dObject){
 
   })(response));
   
-      console.log ("Final = ");
-	  console.log (response);
+     // console.log ("Final = ");
+	  //console.log (response);
 	  
-	  directionsDisplay.setDirections(response);
+	  //directionsDisplay.setDirections(response);
 }
 
 google.maps.event.addDomListener(window, 'load', initialize);
