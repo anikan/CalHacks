@@ -31,12 +31,11 @@ app.all('*', function(req, res, next) {
 app.post('/createGeoJSON', function(req,res){
 
 	var rawData = JSON.parse(req.body.directions);
-  console.log(rawData.routes[0].legs[0]);
 	featureCollection.features = [];
 
-  for(var i=0;i<rawData.routes[0].legs[0].steps.length-1;i++) {
-    coordinates = rawData.routes[0].legs[0].steps[i].polyline.points;
-   coordinates2 = rawData.routes[0].legs[0].steps[i+1].polyline.points;
+  for(var i=0;i<rawData.steps.length-1;i++) {
+    coordinates = rawData[i].polyline.points;
+   coordinates2 = rawData[i+1].polyline.points;
     coordinates = polyline.decode(coordinates);
    coordinates2 = polyline.decode(coordinates2);
 
@@ -75,7 +74,7 @@ app.post('/createGeoJSON', function(req,res){
 
 	feature.properties.key = i;
 	//feature2.properties.key = i;
-	feature.properties.duration = rawData.routes[0].legs[0].steps[i].duration.value
+	feature.properties.duration = rawData[i].duration.value
 
 	featureCollection.features.push(feature);
 	// featureCollection.features.push(feature2);

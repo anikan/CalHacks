@@ -4,6 +4,15 @@
 
   var pos;
 
+$(document).ready(function(){
+  $(".row").on("hover",function(){
+    console.log(this);
+    var id = $(this).attr("id");
+    $(".point" + id).css("stroke","#E74C3C")
+  });
+
+});
+  
 
 
   function initialize() {
@@ -219,27 +228,25 @@ var bikeResults = [];
       }
 
     }
-    console.log(transitResponse);
     $.ajax({
       type: "POST",
       url: '/createGeoJSON',
       data: {
-        'directions': JSON.stringify(transitResponse)
+        'directions': JSON.stringify(transitResponse.routes[0].legs[0].steps)
       },
       dataType: 'json',
       success: function(data) {
         drawRoute(data, transitResponse);
       },
       error: function(data){
-        $(".logo").append("Error Loading Directions");
-        
+        $("#directions-panel").text("");
         $("#directions-panel").fadeOut();
         $(".splash").fadeIn();
       }
     });
     var steps = transitResponse.routes[0].legs[0].steps;
     for (var i = 0; i < steps.length; i++) {
-      $(".directions-list").append("<div class='row'><span class='lead'>" + steps[i].instructions + "</span><br />" + steps[i].duration.text + "</div>")
+      $(".directions-list").append("<div class='row' id='"+ i +"'><span class='lead'>" + steps[i].instructions + "</span><br />" + steps[i].duration.text + "</div>")
     }
 
   }
@@ -281,7 +288,8 @@ var bikeResults = [];
       .data(data.features)
       .enter().append("path")
       .attr("class", function(d) {
-        return "point"
+        console.log(d);
+        return "point" + d.properties.key;
       })
       .attr("style", "fill: none;stroke-width: 4px;stroke:#3366FF;");
     var steps = maps.routes[0].legs[0].steps;
@@ -385,4 +393,5 @@ var bikeResults = [];
     }
 
   }
+
   google.maps.event.addDomListener(window, 'load', initialize);
