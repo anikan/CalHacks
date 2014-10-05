@@ -13,9 +13,11 @@
 $(document).on("mouseover", ".row", function(e) {
   var id = $(this).attr("id");
   $(".point"+id).css("stroke",'#C0392B');
-  console.log("does this work?");
   var longlang = $(".point"+id).attr("id").split(",");
-  map.panTo([longlang[0],longlang[1]])
+  map.panTo([longlang[0],longlang[1]],{
+      animate:true,
+      duration:1
+    })
   });
 
 $(document).on("mouseout", ".row", function(e) {
@@ -168,7 +170,6 @@ $(document).on("mouseout", ".row", function(e) {
     $("#directions-panel").fadeIn();
     var start = $('#start').val();
     var end = $('#end').val();
-    console.log(start + end);
     var transitrequest = {
       origin: start,
       destination: end,
@@ -312,7 +313,6 @@ var bikeResults = [];
 
     // Reposition the SVG to cover the features.
     function reset() {
-      console.log("reset");
       var bounds = d3path.bounds(data);
       topLeft = bounds[0],
       bottomRight = bounds[1];
@@ -332,28 +332,6 @@ var bikeResults = [];
           return translatePoint(d);
         });
     }
-
-    // $(".point").each(function(d) {
-    //   console.log(d);
-    //   //add the translation of the map's g element
-    //   startPoint[0] = startPoint[0]; //+ topLeft[0];
-    //   startPoint[1] = startPoint[1]; //+ topLeft[1];
-    //   var newLatLon = coordToLatLon(startPoint);
-    //   pointsArray.push([newLatLon.lng, newLatLon.lat, d.properties.hasfare]);
-    //   points = g.selectAll(".point").data(pointsArray).enter().append(
-    //     'circle').attr("r", 5).attr("class", function(d) {
-    //     if (d[2]) {
-    //       return "startPoint point";
-    //     } else {
-    //       return "endPoint point";
-    //     }
-    //   }).attr("transform", function(d) {
-    //     return translatePoint(d);
-    //   });
-    //   marker.transition().duration(500).attr("r", 5).attr('style',
-    //     'opacity:1');
-
-    // });
 
     // Use Leaflet to implement a D3 geometric transformation.
     function projectPoint(x, y) {
