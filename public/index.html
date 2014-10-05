@@ -1,0 +1,44 @@
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Directions service</title>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+     <script src='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.js'></script>  
+  <link href='https://api.tiles.mapbox.com/mapbox.js/v2.1.2/mapbox.css' rel='stylesheet' />
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+  <link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css" />
+
+  </head>
+  <body>
+    <div class="splash">
+      <div class="logo">
+        <img src="images/bike.png">
+      </div>
+      <div id="panel">
+        <form id="location-form">
+          <input id="start" class="form-control" type="text" placeholder="Start Location"></input>
+          <input id="end" class="form-control" type="text" placeholder="End Location"></input>
+          <input type="submit" class="btn btn-primary" value="Get Directions!"></input>
+        </form>
+      </div>
+    </div>
+    
+    <div class="directions box" id="directions-panel">
+      <span id="directions-header">
+      </span>
+      <div class="directions-list">
+      </div>
+    </div>
+    <div id="map-canvas">
+
+      <div id="map">
+      </div>
+      
+    </div>
+    <script src="js/script.js"></script>
+    </body>
+</html>

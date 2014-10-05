@@ -1,0 +1,120 @@
+html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+      .navbar{
+        margin-bottom: 0px;
+      }
+      .splash {
+       background: url('../images/splash.jpg') center center;
+       background-size: cover;
+       background-attachment: fixed;
+       position: fixed;
+       top: 0;
+       right: 0;
+       bottom: 0;
+       left: 0;
+       min-height: 360px;
+       z-index: 999;
+       text-align: center;
+      }
+      .logo{
+        padding:5%;
+      }
+      .error{
+        animation: highlight 1s;
+        border-color: #E74C3C;
+        outline: 0;
+         -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(231, 76, 60, 0.6);
+          box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(231, 76, 60, 0.6);
+      }
+
+      #panel {
+        width:50%;
+        margin:auto;
+        padding:1%;
+      }
+      #panel input{
+        width: 40%;
+        margin: 3%;
+        text-align:center;
+        display: inline-block;
+      }
+       #pac-input {
+        background-color: #fff;
+        padding: 0 11px 0 13px;
+        width: 400px;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        text-overflow: ellipsis;
+      }
+
+      #pac-input:focus {
+        border-color: #4d90fe;
+     
+      }
+
+      #directions-panel {
+        height: auto;
+        float: right;
+        width: 25%;
+        overflow-x: hidden;
+        background: rgba(149, 165, 166, .5);
+        padding: 10px;
+        box-sizing: border-box;
+        border-radius: 6px;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        min-height: 360px;
+        z-index: 999;
+        text-align: center;
+        display:none;
+        color: #fff;
+
+      }
+
+      #directions-panel .row{
+        background: rgba(149, 165, 166, .5);
+        margin-top: 5%;
+        margin-bottom: 5%;
+        padding: 3%;
+      }
+
+      .directions-list{
+      }
+      #map-canvas {
+        width:70%;
+        float:left;
+      }
+       #map { 
+        position:absolute; 
+        top:0;
+         bottom:0; 
+        width:100%; }
+
+      #control {
+        background: #fff;
+        padding: 5px;
+        font-size: 14px;
+        font-family: Arial;
+        border: 1px solid #ccc;
+        box-shadow: 0 2px 2px rgba(33, 33, 33, 0.4);
+        display: none;
+      }
+
+      @media print {
+        #map-canvas {
+          height: 500px;
+          margin: 0;
+        }
+
+        #directions-panel {
+          float: none;
+          width: auto;
+        }
+      }
