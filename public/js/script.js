@@ -235,8 +235,8 @@ var bikeResults = [];
 
         console.log("Bike Loop" + y );
 
-
-        if(transitResponse.routes[0].legs[0].steps[w].start_location === bikeResults[y].routes[0].legs[0].start_location){
+        console.log("Checking if " + transitResponse.routes[0].legs[0].steps[w].start_location.B + "  " + bikeResults[y].routes[0].legs[0].start_location.B);
+        if((transitResponse.routes[0].legs[0].steps[w].start_location.B === bikeResults[y].routes[0].legs[0].start_location.B) &&(transitResponse.routes[0].legs[0].steps[w].start_location.k === bikeResults[y].routes[0].legs[0].start_location.k)){
             console.log("Same Start Location");
           if(transitResponse.routes[0].legs[0].steps[w].duration.value > bikeResults[y].routes[0].legs[0].duration.value){
 
