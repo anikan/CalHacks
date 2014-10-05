@@ -152,7 +152,14 @@ function compareSteps(transitResponse, bikeResults){
       /////////////////////////////////////////////////
 
       transitResponse.routes[0].legs[0].steps.splice(w,1,bikeResults[w].routes[0].legs[0].steps[0]);
+      console.log(bikeResults[w].routes[0].legs[0]);
 
+      console.log( transitResponse.routes[0].legs[0]);
+      for(var y = 1 ; y<bikeResults[w].routes[0].legs[0].steps.length; y++){
+
+        transitResponse.routes[0].legs[0].steps.splice(w,0,bikeResults[w].routes[0].legs[0].steps[y]);
+
+      }
 
     }
     else{
