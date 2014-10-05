@@ -278,12 +278,17 @@ function compareSteps(transitResponse, bikeResults) {
   });
   var steps = transitResponse.routes[0].legs[0].steps;
   for (var i = 0; i < steps.length; i++) {
-    $(".directions-list").append(
-    "<div class='row' id='"+ i +"'>\
-      <span class='lead'>" + steps[i].instructions + "</span>\
-      <br />" +
-       steps[i].duration.text + 
-    "</div>")
+    console.log(steps[i].instructions);
+    var instructions = steps[i].instructions.replace("Destination will be on the right","");
+    var instructions = instructions.replace("Destination will be on the left","");
+    console.log(instructions);
+    var html = "<div class='row' id='"+ i +"'><span class='lead'>" + instructions + "</span><br />" 
+      + steps[i].duration.text;
+      if(steps[i].travel_mode == "BICYCLING"){
+        html += "<br /> <img src='/images/bike.png' style='width:20%'>";
+      }
+    html += "</div>";
+    $(".directions-list").append(html);
   }
 }
 
