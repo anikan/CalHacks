@@ -260,7 +260,7 @@ function compareSteps(transitResponse, bikeResults) {
     for(var y = 0 ; y<bikeResults.length; y++){
       var bike_leg = bikeResults[y].routes[0].legs[0];//current y_th bike leg
       console.log("Bike Loop" + y );
-      //console.log("Checking if " + transitResponse.routes[0].legs[0].steps[w].start_location.B + "  " + bikeResults[y].routes[0].legs[0].start_location.B);
+      console.log("Checking if " + transitResponse.routes[0].legs[0].steps[w].start_location.B + "  " + bikeResults[y].routes[0].legs[0].start_location.B + "and "+ transitResponse.routes[0].legs[0].steps[w].start_location.k + "  " + bikeResults[y].routes[0].legs[0].start_location.k);
       if((transit_step.start_location.B === bike_leg.start_location.B) 
         &&(transit_step.start_location.k === bike_leg.start_location.k)){
         console.log("Same Start Location");
